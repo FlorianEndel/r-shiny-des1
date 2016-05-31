@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "\nlibrary(shiny)\n\nshinyUI(fluidPage(\n\n  # Application title\n  titlePanel(\"DES: hospital queue\"),\n\n  # Sidebar with a slider input for number of bins\n  sidebarLayout(\n    sidebarPanel(\n    \tdiv(style=\"display:inline-block\",\n\t      actionButton(\"button_single\", \"Run simulation\"),\n    \t\tstyle=\"display:center-align\"),\n      br(),\n    \ttabsetPanel(\n    \t\ttabPanel(\"Resources\",\n    \t\t\th4('Stuff'),\n\t\t\t\t\tsliderInput(\"nurse\", \"Nurse(s):\",\n\t\t\t\t\t            min = 1, max = 10, step=1,\n\t\t\t\t\t            value = 3, round=TRUE),\n\t\t\t\t\tsliderInput(\"doctor\", \"Doctor(s):\",\n\t\t\t\t\t            min = 1, max = 10, step=1,\n\t\t\t\t\t            value = 4, round=TRUE),\n\t\t\t\t\tsliderInput(\"administration\", \"Administration:\",\n\t\t\t\t\t            min = 1, max = 10, step=1,\n\t\t\t\t\t            value = 1, round=TRUE),\n\t\t\t\t\th4('Patients'),\n\t\t\t\t\tsliderInput(\"patients_time_mean\", \"Mean time between patients:\",\n\t\t\t\t\t            min = 1, max = 10, step=1,\n\t\t\t\t\t            value = 5, round=TRUE),\n\t\t\t\t\tsliderInput(\"patients_time_sd\", \"SD of time between patients:\",\n\t\t\t\t\t            min = 1, max = 10, step=1,\n\t\t\t\t\t            value = 2, round=TRUE)\n    \t\t),\n    \t\ttabPanel(\"Runtime\",\n    \t\t\th4('Environment'),\n\t\t\t\t\tsliderInput(\"steps\",\n\t\t\t\t\t            \"Simulation steps (hours * 60):\",\n\t\t\t\t\t            min = 1, max = 8, step=1,\n\t\t\t\t\t            value = 8, round=TRUE),\n\t\t      sliderInput(\"iterations\",\n\t\t                  \"number of simulation runs:\",\n\t\t                  min = 1, max = 180, step=10,\n\t\t                  value = 30, round=TRUE),\n\t\t      sliderInput(\"cores\",\n\t\t                  \"number of parallel processes:\",\n\t\t                  min = 1, max = 4, step=1,\n\t\t                  value = 3, round=TRUE)\n    \t\t),\n    \t\ttabPanel(\"Plot\",\n    \t\t\th4(\"Resource usage\"),\n  \t\t\t\tselectInput('resource_usage',\n      \t\t\t\t\t\t'Show resource usage for:',\n      \t\t\t\t\t\tc('Nurse(s)' = 'nurse',\n      \t\t\t\t\t\t\t'Doctor(s)' = 'doctor',\n      \t\t\t\t\t\t\t'Administration' = 'administration')\n\t\t      ),\n\t\t      checkboxInput('resource_usage_steps', 'show steps in resource usage', value=FALSE),\n\t\t      hr(),\n  \t\t\t\th4(\"Evolution of arrival times\"),\n\t\t      selectInput('evolution_arrival_times',\n\t\t      \t\t\t\t\t\t'Show evolution of arrival times for:',\n\t\t      \t\t\t\t\t\tc('Waiting time' = 'waiting_time',\n\t\t      \t\t\t\t\t\t\t'Activity time' = 'activity_time',\n\t\t      \t\t\t\t\t\t\t'Flow time' = 'flow_time')\n\t\t      )\n    \t\t)\n    \t)\n    ),\n\n    # Show a plot of the generated distribution\n    mainPanel(\n      plotOutput(\"resource_utilization\"),\n      plotOutput(\"resource_usage\"),\n      plotOutput(\"evolution_arrival_times\")\n    )\n  )\n))\n",
+    "created" : 1464689502322.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3681183807",
+    "id" : "54618C56",
+    "lastKnownWriteTime" : 1464706031,
+    "last_content_update" : 1464706031077,
+    "path" : "~/Documents/Devel/R/DES/DES shiny/ui.R",
+    "project_path" : "ui.R",
+    "properties" : {
+        "chunk_rendered_width" : "650"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

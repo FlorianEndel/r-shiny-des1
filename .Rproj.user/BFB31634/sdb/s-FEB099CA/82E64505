@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "\nlibrary(shiny)\nlibrary(simmer)\nlibrary(magrittr)\nlibrary(parallel)\n\n\nshinyServer(function(input, output) {\n\n\tdes_single <- eventReactive(input$button_single, {\n\t\t## model pathway/trajectory through hospital\n\t\tt0 <- create_trajectory(\"hospital\") %>%\n\n\t\t  ## add an intake activity\n\t\t  seize(\"nurse\", 1) %>%\n\t\t  timeout(function() abs(rnorm(1, 15))) %>%\n\t\t  release(\"nurse\", 1) %>%\n\n\t\t  ## add a consultation activity\n\t\t  seize(\"doctor\", 1) %>%\n\t\t  timeout(function() abs(rnorm(1, 20))) %>%\n\t\t  release(\"doctor\", 1) %>%\n\n\t\t  ## add a planning activity\n\t\t  seize(\"administration\", 1) %>%\n\t\t  timeout(function() abs(rnorm(1, 5))) %>%\n\t\t  release(\"administration\", 1)\n\n\n\t\tenvs <- mclapply(1:isolate(input$iterations), function(i) {\n\t\t  simmer(\"HospitalDES\") %>%\n\t\t\t\t## create environment and assign resouces by quantity\n\t\t    add_resource(\"nurse\", isolate(input$nurse)) %>%\n\t\t    add_resource(\"doctor\", isolate(input$doctor)) %>%\n\t\t    add_resource(\"administration\", isolate(input$administration)) %>%\n\n\t\t\t\t## add generator for events (patients) with an tracetory\n\t\t    add_generator(\"patient\", t0,\n\t\t    \t\t\t\t\t\t\tfunction() abs(rnorm(1, isolate(input$patients_time_mean),\n\t\t    \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t isolate(input$patients_time_sd)))\n\t\t    ) %>%\n\n\t\t    run(isolate(input$steps)*60) %>%\n\t\t    wrap()\n\t\t}, mc.cores=isolate(input$cores))\n\n\t\treturn(envs)\n\n\t})\n\n  output$resource_utilization <- renderPlot({\n  \tvalidate(\n      need(des_single(), 'Run simulation to get output!')\n    )\n  \tenvs <- des_single()\n\t\tplot_resource_utilization(envs, c(\"nurse\", \"doctor\",\"administration\"))\n  })\n\n  output$resource_usage <- renderPlot({\n  \tenvs <- des_single()\n\t\tplot_resource_usage(envs, input$resource_usage, items=\"server\",\n\t\t\t\t\t\t\t\t\t\t\t\tsteps=input$resource_usage_steps)\n  })\n\n  output$evolution_arrival_times <- renderPlot({\n  \tenvs <- des_single()\n\t\tplot_evolution_arrival_times(envs, type = input$evolution_arrival_times)\n  })\n\n\n\n})\n",
+    "created" : 1464689502613.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2388655927",
+    "id" : "82E64505",
+    "lastKnownWriteTime" : 1464697487,
+    "last_content_update" : 1464697487540,
+    "path" : "~/Documents/Devel/R/DES/DES shiny/server.R",
+    "project_path" : "server.R",
+    "properties" : {
+        "chunk_rendered_width" : "650"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

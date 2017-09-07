@@ -1,6 +1,7 @@
 
 library(shiny)
 library(simmer)
+library(simmer.plot)
 library(magrittr)
 library(parallel)
 
@@ -53,18 +54,18 @@ shinyServer(function(input, output) {
       need(des_single(), 'Run simulation to get output!')
     )
   	envs <- des_single()
-		plot_resource_utilization(envs, c("nurse", "doctor","administration"))
+		plot(envs, what = "resources", metric = "utilization", c("nurse", "doctor","administration"))
   })
 
   output$resource_usage <- renderPlot({
   	envs <- des_single()
-		plot_resource_usage(envs, input$resource_usage, items="server",
+		plot(envs, input$resource_usage, what = "resources", metric = "usage", #items="server",
 												steps=input$resource_usage_steps)
   })
 
   output$evolution_arrival_times <- renderPlot({
   	envs <- des_single()
-		plot_evolution_arrival_times(envs, type = input$evolution_arrival_times)
+		plot(envs, what = "arrivals", metric = input$evolution_arrival_times)
   })
 
 

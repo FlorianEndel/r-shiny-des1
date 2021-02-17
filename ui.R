@@ -1,8 +1,13 @@
 
 library(shiny)
+library(shinyalert)
 library(htmltools)
+library(waiter)
 
 shinyUI(fluidPage(
+
+	use_waiter(), # include dependencies
+	useShinyalert(),
 
   # Application title
   titlePanel("DES: hospital queue"),
@@ -72,7 +77,7 @@ shinyUI(fluidPage(
 		      sliderInput("iterations",
 		                  "number of simulation runs:",
 		                  min = 1, max = 180, step=10,
-		                  value = 30, round=TRUE),
+		                  value = 11, round=TRUE),
 		      sliderInput("cores",
 		                  "number of parallel processes:",
 		                  min = 1, max = 4, step=1,

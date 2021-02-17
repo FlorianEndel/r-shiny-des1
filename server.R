@@ -1,14 +1,19 @@
 
 library(shiny)
+library(shinyalert)
+
 library(simmer)
 library(simmer.plot)
 library(magrittr)
 library(parallel)
 
 
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
 
 	des_single <- eventReactive(input$button_single, {
+
+		print('ping')
+
 		## model pathway/trajectory through hospital
 		t0 <- trajectory("hospital") %>%
 
@@ -28,6 +33,12 @@ shinyServer(function(input, output) {
 		  release("administration", 1)
 
 
+		print('ping')
+		waiter_show( # show the waiter
+			html = spin_fading_circles() # use a spinner
+		)
+
+
 		envs <- mclapply(1:isolate(input$iterations), function(i) {
 		  simmer("HospitalDES") %>%
 				## create environment and assign resouces by quantity
@@ -45,14 +56,24 @@ shinyServer(function(input, output) {
 		    wrap()
 		}, mc.cores=isolate(input$cores))
 
+
+		waiter_hide() # hide the waiter
+
 		return(list(envs = envs, t0 = t0))
 
 	})
 
+
+	observeEvent(des_single(), {
+		# Show a modal when the button is pressed
+		shinyalert("Simulation finished", type = "success")
+	})
+
+
   output$resource_utilization <- renderPlot({
-  	validate(
-      need(des_single(), 'Run simulation to get output!')
-    )
+  # 	validate(
+  #     need(des_single(), 'Run simulation to get output!')
+  #   )
   	envs <- des_single()$envs
   	resources <- get_mon_resources(envs)
   	plot(resources, metric="utilization", c("nurse", "doctor", "administration")) +

@@ -527,6 +527,13 @@
       "Repository": "RSPM",
       "Hash": "6e3b6ae7fe02b5859e4bb277f218b8ae"
     },
+    "shinyalert": {
+      "Package": "shinyalert",
+      "Version": "2.0.0",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "a130b62f6d5533fcc1cab6c8161358d9"
+    },
     "simmer": {
       "Package": "simmer",
       "Version": "4.4.2",
@@ -597,6 +604,13 @@
       "Repository": "RSPM",
       "Hash": "4a5081acfb7b81a572e4384a7aaf2af1"
     },
+    "uuid": {
+      "Package": "uuid",
+      "Version": "0.1-4",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "e4169eb989a5d03ccb6b628cad1b1b50"
+    },
     "vctrs": {
       "Package": "vctrs",
       "Version": "0.3.6",
@@ -624,6 +638,13 @@
       "Source": "Repository",
       "Repository": "RSPM",
       "Hash": "12545f2acf49d1d346d075580122d89c"
+    },
+    "waiter": {
+      "Package": "waiter",
+      "Version": "0.2.0",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "58bd688fb765cf778b633df0e2502003"
     },
     "waldo": {
       "Package": "waldo",

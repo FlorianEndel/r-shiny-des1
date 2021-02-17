@@ -1,6 +1,7 @@
 
 library(shiny)
 library(simmer)
+library(simmer.plot)
 library(magrittr)
 library(parallel)
 
@@ -9,21 +10,21 @@ shinyServer(function(input, output) {
 
 	des_single <- eventReactive(input$button_single, {
 		## model pathway/trajectory through hospital
-		t0 <- create_trajectory("hospital") %>%
+		t0 <- trajectory("hospital") %>%
 
 		  ## add an intake activity
 		  seize("nurse", 1) %>%
-		  timeout(function() abs(rnorm(1, 15))) %>%
+		  timeout(function() abs(rnorm(1, mean = isolate(input$nurse_mean), sd = isolate(input$nurse_sd)))) %>%
 		  release("nurse", 1) %>%
 
 		  ## add a consultation activity
 		  seize("doctor", 1) %>%
-		  timeout(function() abs(rnorm(1, 20))) %>%
+		  timeout(function() abs(rnorm(1, mean = isolate(input$doc_mean), sd = isolate(input$doc_sd)))) %>%
 		  release("doctor", 1) %>%
 
 		  ## add a planning activity
 		  seize("administration", 1) %>%
-		  timeout(function() abs(rnorm(1, 5))) %>%
+		  timeout(function() abs(rnorm(1, mean = isolate(input$admin_mean), sd = isolate(input$admin_sd)))) %>%
 		  release("administration", 1)
 
 
@@ -44,7 +45,7 @@ shinyServer(function(input, output) {
 		    wrap()
 		}, mc.cores=isolate(input$cores))
 
-		return(envs)
+		return(list(envs = envs, t0 = t0))
 
 	})
 
@@ -52,19 +53,32 @@ shinyServer(function(input, output) {
   	validate(
       need(des_single(), 'Run simulation to get output!')
     )
-  	envs <- des_single()
-		plot_resource_utilization(envs, c("nurse", "doctor","administration"))
+  	envs <- des_single()$envs
+  	resources <- get_mon_resources(envs)
+  	plot(resources, metric="utilization", c("nurse", "doctor", "administration")) +
+  		theme_bw(base_size = 18)
+		#plot_resource_utilization(envs, c("nurse", "doctor","administration"))
   })
 
   output$resource_usage <- renderPlot({
-  	envs <- des_single()
-		plot_resource_usage(envs, input$resource_usage, items="server",
-												steps=input$resource_usage_steps)
+  	envs <- des_single()$envs
+  	resources <- get_mon_resources(envs)
+		#plot_resource_usage(envs, input$resource_usage, items="server",
+		#										steps=input$resource_usage_steps)
+		plot(resources, metric="usage", input$resource_usage, items="server",
+				 steps=input$resource_usage_steps) +
+			theme_bw(base_size = 18)
   })
 
   output$evolution_arrival_times <- renderPlot({
-  	envs <- des_single()
-		plot_evolution_arrival_times(envs, type = input$evolution_arrival_times)
+  	envs <- des_single()$envs
+  	arrivals <- get_mon_arrivals(envs)
+		plot(arrivals, metric = input$evolution_arrival_times) +
+			theme_bw(base_size = 18)
+
+		#get_palette <- scales::brewer_pal(type = "qual", palette = 1)
+		#plot(des_single()$t0, fill = get_palette)
+
   })
 
 

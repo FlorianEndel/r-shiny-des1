@@ -1,5 +1,6 @@
 
 library(shiny)
+library(htmltools)
 
 shinyUI(fluidPage(
 
@@ -9,9 +10,10 @@ shinyUI(fluidPage(
   # Sidebar with a slider input for number of bins
   sidebarLayout(
     sidebarPanel(
-    	div(style="display:inline-block",
-	      actionButton("button_single", "Run simulation"),
-    		style="display:center-align"),
+
+    	div(#style="display:inline-block",
+	      actionButton("button_single", strong("Run simulation"), width = '90%', icon = icon('diagnoses')),
+    		style="display:center-align", align = 'center'),
       br(),
     	tabsetPanel(
     		tabPanel("Resources",
@@ -25,6 +27,8 @@ shinyUI(fluidPage(
 					sliderInput("administration", "Administration:",
 					            min = 1, max = 10, step=1,
 					            value = 1, round=TRUE),
+					hr(),
+
 					h4('Patients'),
 					sliderInput("patients_time_mean", "Mean time between patients:",
 					            min = 1, max = 10, step=1,
@@ -33,6 +37,32 @@ shinyUI(fluidPage(
 					            min = 1, max = 10, step=1,
 					            value = 2, round=TRUE)
     		),
+				tabPanel("Trajectory",
+								 h4('Nurse consultation'),
+								 sliderInput("nurse_mean", "Mean in minutes:",
+								 						min = 1, max = 30, step = 5,
+								 						value = 15, round = TRUE),
+								 sliderInput("nurse_sd", "Standard Deviation in minutes:",
+								 						min = 0, max = 10, step = 1,
+								 						value = 1, round = TRUE),
+								 hr(),
+								 h4('Doctor'),
+								 sliderInput("doc_mean", "Mean in minutes:",
+								 						min = 1, max = 60, step = 5,
+								 						value = 20, round=TRUE),
+								 sliderInput("doc_sd", "Standard Deviation in minutes:",
+								 						min = 0, max = 10, step = 1,
+								 						value = 1, round = TRUE),
+								 hr(),
+								 h4('Administration'),
+								 sliderInput("admin_mean", "Mean in minutes:",
+								 						min = 1, max = 30, step = 1,
+								 						value = 5, round=TRUE),
+								 sliderInput("admin_sd", "Standard Deviation in minutes:",
+								 						min = 0, max = 10, step = 1,
+								 						value = 1, round = TRUE),
+
+				),
     		tabPanel("Runtime",
     			h4('Environment'),
 					sliderInput("steps",
@@ -71,9 +101,13 @@ shinyUI(fluidPage(
 
     # Show a plot of the generated distribution
     mainPanel(
-      plotOutput("resource_utilization"),
-      plotOutput("resource_usage"),
-      plotOutput("evolution_arrival_times")
+    	tabsetPanel(
+    		tabPanel("Outline", img(src = 'fig/Trajectory_annotated.png', align = "center", height = '80%')),
+    		tabPanel("Auslastung", plotOutput("resource_utilization", height = '600px')),
+    		tabPanel("Usage", plotOutput("resource_usage", height = '600px')),
+    		tabPanel("Table", plotOutput("evolution_arrival_times", height = '600px'))
+    	)
+
     )
   )
 ))

@@ -102,10 +102,10 @@ shinyUI(fluidPage(
     # Show a plot of the generated distribution
     mainPanel(
     	tabsetPanel(
-    		tabPanel("Outline", img(src = 'fig/Trajectory_annotated.png', align = "center", height = '80%')),
-    		tabPanel("Auslastung", plotOutput("resource_utilization", height = '600px')),
+    		tabPanel("Outline", img(src = 'fig/Trajectory_annotated.png', align = "center", height = '750px')),
+    		tabPanel("Utilization", plotOutput("resource_utilization", height = '600px')),
     		tabPanel("Usage", plotOutput("resource_usage", height = '600px')),
-    		tabPanel("Table", plotOutput("evolution_arrival_times", height = '600px'))
+    		tabPanel("Patients", plotOutput("evolution_arrival_times", height = '600px'))
     	)
 
     )

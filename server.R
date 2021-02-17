@@ -65,15 +65,15 @@ shinyServer(function(input, output, session) {
 
 
 	observeEvent(des_single(), {
-		# Show a modal when the button is pressed
 		shinyalert("Simulation finished", type = "success")
 	})
 
 
   output$resource_utilization <- renderPlot({
-  # 	validate(
-  #     need(des_single(), 'Run simulation to get output!')
-  #   )
+  	validate(
+      need(des_single(), 'Run simulation to get output!')
+    )
+
   	envs <- des_single()$envs
   	resources <- get_mon_resources(envs)
   	plot(resources, metric="utilization", c("nurse", "doctor", "administration")) +
@@ -82,6 +82,10 @@ shinyServer(function(input, output, session) {
   })
 
   output$resource_usage <- renderPlot({
+  	validate(
+  		need(des_single(), 'Run simulation to get output!')
+  	)
+
   	envs <- des_single()$envs
   	resources <- get_mon_resources(envs)
 		#plot_resource_usage(envs, input$resource_usage, items="server",
@@ -92,6 +96,10 @@ shinyServer(function(input, output, session) {
   })
 
   output$evolution_arrival_times <- renderPlot({
+  	validate(
+  		need(des_single(), 'Run simulation to get output!')
+  	)
+
   	envs <- des_single()$envs
   	arrivals <- get_mon_arrivals(envs)
 		plot(arrivals, metric = input$evolution_arrival_times) +
